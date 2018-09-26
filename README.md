@@ -44,7 +44,7 @@ ObservesCanExecute()
             .ObservesCanExecute(() => this.IsChecked);
     }
 
-IDisposable 型、またはそれを継承している型の変数について、ReactiveProperty の AddTo() を使えるようにしました。ただし、ViewModel 内でのみ使用可能です。
+IDisposable 型、またはそれを継承している型の変数について、ReactiveProperty の AddTo() を使えるようにしました。ただし、ViewModel 継承先クラス内でのみ使用可能です。
 ※.NET Framework 4.7 環境で確認。
 
     class Person : NotificationObject

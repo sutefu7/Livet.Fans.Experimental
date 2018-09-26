@@ -65,21 +65,21 @@ IDisposable 型、またはそれを継承している型の変数について�
 
 ## Livet.Fans.Experimental 名前空間
 
-XAML 側で以下の名前空間を定義しておきます。
+XAML 側、Binding 機能に関する独自処理拡張を組み込んでいます。以下の名前空間を定義しておきます。
 
-    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
     xmlns:lf="http://schemas.livet-fans.jp/2018/wpf"
 
 イベントに対する、メソッド直接バインディング、コマンド直接バインディングを使えるようにしました。
 
 引数無し版
 
+    ・View
     <StackPanel>
         <Button Content="button1" Click="{lf:Binding Button_Click}" />
-        <Button Content="button1" Click="{lf:Binding ClickCommand}" />
+        <Button Content="button2" Click="{lf:Binding ClickCommand}" />
     </StackPanel>
 
+    ・ViewModel
     public ViewModelCommand ClickCommand { get; set; }
 
     public MainWindowViewModel()
@@ -94,11 +94,13 @@ XAML 側で以下の名前空間を定義しておきます。
 
 イベント引数を受け取る版
 
+    ・View
     <StackPanel>
         <Button Content="button1" Click="{lf:Binding Button_Click, UseEventArgs=True}" />
-        <Button Content="button1" Click="{lf:Binding ClickCommand, UseEventArgs=True}" />
+        <Button Content="button2" Click="{lf:Binding ClickCommand, UseEventArgs=True}" />
     </StackPanel>
 
+    ・ViewModel
     public ListenerCommand<EventArgs> ClickCommand { get; set; }
 
     public MainWindowViewModel()
@@ -120,11 +122,13 @@ XAML 側で以下の名前空間を定義しておきます。
 ReactiveProperty をバインドしている場合、ReactiveProperty の Value プロパティ省略指定時の、自動調整機能があります。
 明示的に Value を記載している場合は、調整処理は働かず通常処理となります。
 
+    ・View
     <StackPanel>
         <TextBox Text="{lf:Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <TextBox Text="{lf:Binding Name.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </StackPanel>
 
+    ・ViewModel
     public ReactiveProperty<string> Name { get; set; }
 
     public MainWindowViewModel()
@@ -149,7 +153,7 @@ ReactiveProperty をバインドしている場合、ReactiveProperty の Value 
 
 ## 本プログラム
 
-- Livet.Fans.Experimental
+- Livet.Fans.Experimental  
    Copyright (c) sutefu7  
    Released under the MIT license  
    https://github.com/sutefu7/Livet.Fans.Experimental/blob/master/LICENSE  
@@ -157,17 +161,17 @@ ReactiveProperty をバインドしている場合、ReactiveProperty の Value 
 
 ## その他のプログラム
 
-- Livet (LivetCask, 1.3.1.0)
+- Livet (LivetCask, 1.3.1.0)  
    Copyright (c) 2010-2011 Livet Project  
    Released under the zlib/libpng license  
    https://github.com/ugaya40/Livet/blob/master/license-jp.txt  
 
-- Prism
+- Prism  
    Copyright (c) .NET Foundation  
    Released under the MIT license  
    https://github.com/PrismLibrary/Prism/blob/master/LICENSE  
 
-- ReactiveProperty
+- ReactiveProperty  
    Copyright (c) 2018 neuecc, xin9le, okazuki  
    Released under the MIT license  
    https://github.com/runceel/ReactiveProperty/blob/master/LICENSE.txt  

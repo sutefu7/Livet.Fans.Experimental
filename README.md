@@ -15,7 +15,7 @@ NotificationObject, ViewModel の継承先クラス内で、Prism の SetPropert
         set { this.SetProperty(ref name, value); }
     }
 
-ViewModelCommand, ListenerCommand<T> で、Prism の ObservesProperty(), ObservesCanExecute() を使えるようにしました。
+ViewModelCommand, ListenerCommand&#lt;T&#gt; で、Prism の ObservesProperty(), ObservesCanExecute() を使えるようにしました。
 
 ObservesProperty()
 

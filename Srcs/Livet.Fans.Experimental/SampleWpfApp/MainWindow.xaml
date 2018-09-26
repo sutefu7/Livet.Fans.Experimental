@@ -1,0 +1,63 @@
+﻿<Window x:Class="SampleWpfApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SampleWpfApp"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:livet="http://schemas.livet-mvvm.net/2011/wpf"
+        xmlns:lf="http://schemas.livet-fans.jp/2018/wpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <livet:DataContextDisposeAction />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
+    <StackPanel>
+
+        <!-- イベント直接バインディング。コマンド、メソッドのテスト -->
+        <StackPanel Margin="50,20,50,20">
+
+            <StackPanel.DataContext>
+                <local:AViewModel />
+            </StackPanel.DataContext>
+
+            <TextBox Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Button Content="test1: command" Click="{lf:Binding ZeroCommand}" />
+            <Button Content="test2: command with EventArgs" Click="{lf:Binding OneCommand, UseEventArgs=True}" />
+            
+            <Button Content="test3: method" Click="{lf:Binding Button_Click}" />
+            <Button Content="test4: method with EventArgs" Click="{lf:Binding Button_Click, UseEventArgs=True}" />
+
+            <TextBox Text="{Binding Name2.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,10,0,0" />
+            <Button Content="test5: reactive command" Click="{lf:Binding R1Command}" />
+            <Button Content="test6: reactive command with EventArgs" Click="{lf:Binding R2Command, UseEventArgs=True}" />
+
+        </StackPanel>
+
+        <!-- データバインディング。プロパティのテスト -->
+        <StackPanel Margin="50, 20, 50, 50">
+
+            <StackPanel.DataContext>
+                <local:BViewModel />
+            </StackPanel.DataContext>
+            
+            <TextBox Text="{lf:Binding Name1}" />
+            <TextBox Text="{lf:Binding Name2, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Text="{lf:Binding Name3, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Text="{lf:Binding Name4, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Text="{lf:Binding Name5, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            
+            <!-- ReactiveProperty の Value プロパティ省略指定時の、自動調整機能の確認 -->
+            <TextBox Text="{lf:Binding Name6, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Text="{lf:Binding Name7.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Button Content="confirm" Command="{Binding ConfirmCommand}" />
+
+        </StackPanel>
+
+    </StackPanel>
+    
+</Window>

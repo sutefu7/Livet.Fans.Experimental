@@ -17,7 +17,7 @@ NotificationObject, ViewModel の継承先クラス内で、Prism の SetPropert
 
 ViewModelCommand, ListenerCommand<T> で、Prism の ObservesProperty(), ObservesCanExecute() を使えるようにしました。
 
-- ObservesProperty()
+ObservesProperty()
 
     public ViewModelCommand CheckCommand { get; set; }
 
@@ -27,7 +27,7 @@ ViewModelCommand, ListenerCommand<T> で、Prism の ObservesProperty(), Observe
             .ObservesProperty(() => this.Name);
     }
 
-- ObservesCanExecute()
+ObservesCanExecute()
 
     private bool isChecked;
     public bool IsChecked
@@ -73,7 +73,7 @@ XAML 側で以下の名前空間を定義しておきます。
 
 イベントに対する、メソッド直接バインディング、コマンド直接バインディングを使えるようにしました。
 
-- 引数無し版
+引数無し版
 
     <StackPanel>
         <Button Content="button1" Click="{lf:Binding Button_Click}" />
@@ -92,7 +92,7 @@ XAML 側で以下の名前空間を定義しておきます。
 
     }
 
-- イベント引数を受け取る版
+イベント引数を受け取る版
 
     <StackPanel>
         <Button Content="button1" Click="{lf:Binding Button_Click, UseEventArgs=True}" />
@@ -111,13 +111,13 @@ XAML 側で以下の名前空間を定義しておきます。
 
     }
 
-- その他プロパティもバインド可能ですが、こちらはテスト段階です。
+その他プロパティもバインド可能ですが、こちらはテスト段階です。
 
     <StackPanel>
         <TextBox Text="{lf:Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </StackPanel>
 
-- ReactiveProperty をバインドしている場合、ReactiveProperty の Value プロパティ省略指定時の、自動調整機能があります。
+ReactiveProperty をバインドしている場合、ReactiveProperty の Value プロパティ省略指定時の、自動調整機能があります。
 明示的に Value を記載している場合は、調整処理は働かず通常処理となります。
 
     <StackPanel>

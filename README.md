@@ -165,16 +165,23 @@ ReactiveProperty をバインドしている場合、ReactiveProperty の Value 
    Copyright (c) 2010-2011 Livet Project  
    Released under the zlib/libpng license  
    https://github.com/ugaya40/Livet/blob/master/license-jp.txt  
+   以下のソースを流用しています。  
+   https://github.com/ugaya40/Livet/blob/master/.NET4.0/Livet(.NET4.0)/EventListeners/WeakEvents/LivetWeakEventListener.cs  
 
 - Prism  
    Copyright (c) .NET Foundation  
    Released under the MIT license  
    https://github.com/PrismLibrary/Prism/blob/master/LICENSE  
+   以下のソースを流用しています。  
+   https://github.com/PrismLibrary/Prism/blob/master/Source/Prism/Commands/DelegateCommand.cs  
+   https://github.com/PrismLibrary/Prism/blob/master/Source/Prism/Mvvm/BindableBase.cs  
 
 - ReactiveProperty  
    Copyright (c) 2018 neuecc, xin9le, okazuki  
    Released under the MIT license  
    https://github.com/runceel/ReactiveProperty/blob/master/LICENSE.txt  
+   以下のソースを流用しています。  
+   https://github.com/runceel/ReactiveProperty/blob/master/Source/ReactiveProperty.NETStandard/Extensions/IDisposableExtensions.cs  
 
 - MarkupExtensionsForEvents  
    Copyright (c) sourcechord  
@@ -182,4 +189,6 @@ ReactiveProperty をバインドしている場合、ReactiveProperty の Value 
    WPF4.5の新機能～「イベントのマークアップ拡張」で、イベント発生時のコマンド呼び出しをスッキリ記述する～  
    http://sourcechord.hatenablog.com/entry/2014/12/08/030947  
    https://github.com/sourcechord/MarkupExtensionsForEvents/blob/master/LICENSE  
+   以下のソースを流用しています。  
+   https://github.com/sourcechord/MarkupExtensionsForEvents/blob/master/MarkupExtensionsForEvents/InvokeCommandExtension.cs  
 

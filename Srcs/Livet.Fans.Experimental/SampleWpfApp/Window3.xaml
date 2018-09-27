@@ -1,0 +1,26 @@
+﻿<Window x:Class="SampleWpfApp.Window3"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SampleWpfApp"
+        xmlns:lf="http://schemas.livet-fans.jp/2018/wpf"
+        mc:Ignorable="d"
+        Title="Window3" Height="450" Width="800">
+    
+    <StackPanel>
+
+        <StackPanel.DataContext>
+            <local:GViewModel />
+        </StackPanel.DataContext>
+
+        <TextBox Text="{lf:Binding Name1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox Text="{lf:Binding GrandParent.Parent.Child.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox Text="{lf:Binding Name3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <Button Content="check1: Name1" Click="{lf:Binding Check1Command}" />
+        <Button Content="check2: GrandParent.Parent.Child.Name" Click="{lf:Binding Check2Command}" />
+        <Button Content="check3: Name3" Click="{lf:Binding Check3Command}" />
+
+    </StackPanel>
+    
+</Window>

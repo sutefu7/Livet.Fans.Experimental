@@ -174,6 +174,7 @@ ReactiveProperty をバインドしている場合、ReactiveProperty の Value 
    https://github.com/PrismLibrary/Prism/blob/master/LICENSE  
    以下のソースを流用しています。  
    https://github.com/PrismLibrary/Prism/blob/master/Source/Prism/Commands/DelegateCommand.cs  
+   https://github.com/PrismLibrary/Prism/blob/master/Source/Prism/Commands/PropertyObserver.cs  
    https://github.com/PrismLibrary/Prism/blob/master/Source/Prism/Mvvm/BindableBase.cs  
 
 - ReactiveProperty  

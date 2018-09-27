@@ -176,3 +176,10 @@ ReactiveProperty をバインドしている場合、ReactiveProperty の Value 
    Released under the MIT license  
    https://github.com/runceel/ReactiveProperty/blob/master/LICENSE.txt  
 
+- MarkupExtensionsForEvents  
+   Copyright (c) sourcechord  
+   Released under the MIT license  
+   WPF4.5の新機能～「イベントのマークアップ拡張」で、イベント発生時のコマンド呼び出しをスッキリ記述する～  
+   http://sourcechord.hatenablog.com/entry/2014/12/08/030947  
+   https://github.com/sourcechord/MarkupExtensionsForEvents/blob/master/LICENSE  
+

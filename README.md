@@ -1,6 +1,7 @@
 ﻿# Livet.Fans.Experimental
 Livet.Fans.Experimental は、非公式の Livet 拡張ライブラリです。
 他の MVVM ライブラリの便利機能が Livet でも使えたら快適なのにと思い、実際に Livet 向けにカスタマイズして作成しました。
+※公式提供のライブラリではありません。お問い合わせ含め、お間違いの無いようによろしくお願いいたします。
 
 # 機能
 

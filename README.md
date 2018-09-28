@@ -1,7 +1,6 @@
 ﻿# Livet.Fans.Experimental
 Livet.Fans.Experimental は、非公式の Livet 拡張ライブラリです。
-よりシンプルに、より快適にコーディングできるように、他の MVVM ライブラリの機能を Livet 向けにカスタマイズして組み込んでいます。
-要するに各ライブラリの便利機能をパクりました。ただし、各ソース中にオリジナルのリンク先などの情報を残し、比較できるようにしています。
+他の MVVM ライブラリの便利機能が Livet でも使えたら快適なのにと思い、実際に Livet 向けにカスタマイズして作成しました。
 
 # 機能
 
@@ -15,7 +14,7 @@ NotificationObject, ViewModel の継承先クラス内で、Prism の SetPropert
         set { this.SetProperty(ref name, value); }
     }
 
-ViewModelCommand, ListenerCommand&lt;T&gt; で、Prism の ObservesProperty(), ObservesCanExecute() を使えるようにしました。
+ViewModelCommand, ListenerCommand&lt;T&gt; 型の拡張機能で、Prism の ObservesProperty(), ObservesCanExecute() を使えるようにしました。
 
 ObservesProperty()
 
@@ -44,7 +43,7 @@ ObservesCanExecute()
             .ObservesCanExecute(() => this.IsChecked);
     }
 
-IDisposable 型、またはそれを継承している型の変数について、ReactiveProperty の AddTo() を使えるようにしました。ただし、ViewModel 継承先クラス内でのみ使用可能です。
+IDisposable 型、またはそれを継承している型の拡張機能で、ReactiveProperty の AddTo() を使えるようにしました。ただし、ViewModel 継承先クラス内でのみ使用可能です。
 ※.NET Framework 4.7 環境で確認。
 
     class Person : NotificationObject
@@ -65,7 +64,7 @@ IDisposable 型、またはそれを継承している型の変数について�
 
 ## Livet.Fans.Experimental 名前空間
 
-XAML 側、Binding 機能に関する独自処理拡張を組み込んでいます。以下の名前空間を定義しておきます。
+XAML 側、標準 Binding にはできないバインド機構に関する拡張を組み込んでいます。あらかじめ、以下の名前空間を定義しておきます。
 
     xmlns:lf="http://schemas.livet-fans.jp/2018/wpf"
 
@@ -92,7 +91,7 @@ XAML 側、Binding 機能に関する独自処理拡張を組み込んでいま�
 
     }
 
-イベント引数を受け取る版
+イベント引数を受け取る版（※イベント引数経由で View を扱えることもあるため、この仕様は検討中）
 
     ・View
     <StackPanel>

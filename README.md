@@ -15,6 +15,26 @@ NotificationObject, ViewModel の継承先クラス内で、Prism の SetPropert
         set { this.SetProperty(ref name, value); }
     }
 
+NotificationObject, ViewModel の継承先クラス内で、SetCommand() を使えるようにしました。SetProperty() のコマンド版です。
+
+    private ViewModelCommand clickCommand;
+    public ViewModelCommand ClickCommand
+    {
+        get
+        {
+            //if (clickCommand == null)
+            //{
+            //    //clickCommand = new ViewModelCommand(() => { });
+            //    clickCommand = new ViewModelCommand(() => { }, () => true);
+            //}
+            //return clickCommand;
+
+            // 上記と同等
+            //return this.SetCommand(ref clickCommand, () => { });
+            return this.SetCommand(ref clickCommand, () => { }, () => true);
+        }
+    }
+
 ViewModelCommand, ListenerCommand&lt;T&gt; 型の拡張機能で、Prism の ObservesProperty(), ObservesCanExecute() を使えるようにしました。
 
 ObservesProperty()
@@ -44,8 +64,34 @@ ObservesCanExecute()
             .ObservesCanExecute(() => this.IsChecked);
     }
 
+先ほどの、SetCommand() でも、第4引数が ObservesProperty() 相当の役割となっているので、以下のような書き方も可能です。
+
+    private ViewModelCommand clickCommand;
+    public ViewModelCommand ClickCommand
+    {
+        get
+        {
+            //if (clickCommand == null)
+            //{
+            //    clickCommand = new ViewModelCommand
+            //        (
+            //            () => Console.WriteLine(Name),
+            //            () => !string.IsNullOrEmpty(Name)
+            //        ).ObservesProperty(() => Name);
+            //}
+            //return clickCommand;
+            
+            // 上記と同等
+            return this.SetCommand(
+                ref clickCommand, 
+                () => Console.WriteLine(Name), 
+                () => !string.IsNullOrEmpty(Name), 
+                () => Name);
+        }
+    }
+
 IDisposable 型、またはそれを継承している型の拡張機能で、ReactiveProperty の AddTo() を使えるようにしました。ただし、ViewModel 継承先クラス内でのみ使用可能です。
-※.NET Framework 4.7 環境で確認。
+※ReactiveProperty の ObserveProperty() を使ったサンプルだったため、.NET Framework 4.7 環境で確認。
 
     class Person : NotificationObject
     {
@@ -136,6 +182,11 @@ ReactiveProperty をバインドしている場合、ReactiveProperty の Value 
         Name = new ReactiveProperty<string>();
     }
 
+XAML 上で、Prism の ViewModelLocator を使えるようにしました。デフォルト値は「False」です。
+
+    xmlns:lf="http://schemas.livet-fans.jp/2018/wpf"
+    lf:ViewModelLocator.AutoWireViewModel="True"
+
 
 # 開発環境＆動作環境
 
@@ -176,6 +227,8 @@ ReactiveProperty をバインドしている場合、ReactiveProperty の Value 
    https://github.com/PrismLibrary/Prism/blob/master/Source/Prism/Commands/DelegateCommand.cs  
    https://github.com/PrismLibrary/Prism/blob/master/Source/Prism/Commands/PropertyObserver.cs  
    https://github.com/PrismLibrary/Prism/blob/master/Source/Prism/Mvvm/BindableBase.cs  
+   https://github.com/PrismLibrary/Prism/blob/master/Source/Wpf/Prism.Wpf/Mvvm/ViewModelLocator.cs  
+   https://github.com/PrismLibrary/Prism/blob/master/Source/Prism/Mvvm/ViewModelLocationProvider.cs  
 
 - ReactiveProperty  
    Copyright (c) 2018 neuecc, xin9le, okazuki  

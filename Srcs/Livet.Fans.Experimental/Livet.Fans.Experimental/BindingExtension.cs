@@ -15,7 +15,9 @@ using System.Windows.Markup;
 using Livet.Fans.Experimental.EventListeners.WeakEvents;
 
 /* 
- * 
+ * .NET - Get default value for a reflected PropertyInfo
+ * https://stackoverflow.com/questions/407337/net-get-default-value-for-a-reflected-propertyinfo
+ * default(T) のリフレクション版を取得する答え。イメージ: default(xxx.GetType())
  * 
  */
 
@@ -250,12 +252,82 @@ namespace Livet.Fans.Experimental
             var item = new BindingControlObject() { Path = this.Path, WpfMember = provider.TargetProperty };
             item.SetWpfControl(provider.TargetObject);
             
+            // DataContext 自体が変更された場合は、追従して更新する
+            var selector = item.WpfControl.Item1;
+            if (selector == 0)
+            {
+                var element = item.WpfControl.Item2;
+                var listener = new LivetWeakEventListener<DependencyPropertyChangedEventHandler, DependencyPropertyChangedEventArgs>(
+                    h => new DependencyPropertyChangedEventHandler(h),
+                    h => element.DataContextChanged += h,
+                    h => element.DataContextChanged -= h,
+                    (s, e) => element_DataContextChanged(item, e));
+
+                _Listener = listener;
+
+            }
+            else
+            {
+                var element = item.WpfControl.Item3;
+                var listener = new LivetWeakEventListener<DependencyPropertyChangedEventHandler, DependencyPropertyChangedEventArgs>(
+                    h => new DependencyPropertyChangedEventHandler(h),
+                    h => element.DataContextChanged += h,
+                    h => element.DataContextChanged -= h,
+                    (s, e) => element_DataContextChanged(item, e));
+
+                _Listener = listener;
+
+            }
+
+            return ProvideValueInternal(item);
+            
+        }
+
+        /// <summary>
+        /// DataContext が更新されたときのイベントです。
+        /// </summary>
+        /// <param name="item">作業用データクラス</param>
+        /// <param name="e">新しいデータコンテキスト</param>
+        /// <remarks>
+        /// DataContext をバインドしているのに、コントロールから DataContext が取得できないバグの対応。ProvideValue() の準備完了後に、後から DataContext がセットされる場合の対応。
+        /// 任意のタイミングでソースコード経由で更新された場合の他、以下のように、内側で DataContext をセットする記述の場合にも DataContextChanged イベントが発生します。
+        /// ＜Window {livetfans:Binding IsEnabled}＞
+        ///     ＜Window.DataContext＞
+        ///         ＜local:MainWindowViewModel /＞
+        ///     ＜/Window.DataContext＞
+        /// ＜/Window＞
+        /// ※XML コメント内のため、全角文字のタグで囲って書いています。
+        /// </remarks>
+        private void element_DataContextChanged(BindingControlObject item, DependencyPropertyChangedEventArgs e)
+        {
+            // DataContext(=ViewModel) と バインドしている ViewModel のメンバーを再取得
+            item.WpfDataContext = e.NewValue;
+            item.GetViewModelMember();
+            
+            // 再度、コントロールのメンバーに値をセット
+            var returnValue = ProvideValueInternal(item);
+            item.WpfMember = returnValue;            
+        }
+
+        /// <summary>
+        /// 渡された情報を元に、対応する値を返却します。
+        /// </summary>
+        /// <param name="item">作業用データクラス</param>
+        /// <returns>対応する値</returns>
+        private object ProvideValueInternal(BindingControlObject item)
+        {
             var resolver = default(IBindingResolver);
             var wpfMemberType = item.WpfMember.GetType();
-            
+
             // WPF コントロールのメンバーがイベント、またはメソッドかどうか
             if (typeof(EventInfo).IsAssignableFrom(wpfMemberType) || typeof(MethodInfo).IsAssignableFrom(wpfMemberType))
             {
+                // ViewModel がバインドされていない場合、空のデリゲートを返却する
+                if (item.ViewModel == null)
+                {
+                    return new RoutedEventHandler((s, e) => { });
+                }
+
                 var vmMemberType = item.ViewModelMember?.GetType();
                 if (typeof(ICommand).IsAssignableFrom(vmMemberType))
                 {
@@ -271,52 +343,23 @@ namespace Livet.Fans.Experimental
             else
             {
                 // その他のプロパティをバインドしている
+                // ViewModel がバインドされていない場合、デフォルト値を返却する
+                if (item.ViewModel == null)
+                {
+                    var defaultValue = wpfMemberType.IsValueType ? Activator.CreateInstance(wpfMemberType) : null;
+                    return defaultValue;
+                }
 
                 // ReactiveProperty をバインドしている場合、Value プロパティをバインドするように調整する
                 if (item.ViewModelMember != null && item.ViewModelMember.GetType().FullName.StartsWith("Reactive.Bindings.ReactiveProperty"))
                 {
                     this.Path.Path += ".Value";
-                    var repair = new BindingControlObject() { Path = this.Path, WpfMember = provider.TargetProperty };
-                    repair.SetWpfControl(provider.TargetObject);
+                    var repair = new BindingControlObject() { Path = this.Path, WpfMember = item.WpfMember };
+                    repair.SetWpfControl(item.GetWpfControl());
                     item = repair;
                 }
 
                 resolver = new BindingPropertyResolver();
-
-            }
-            
-            // DataContext 自体が変更された場合は、追従して更新する
-            var selector = item.WpfControl.Item1;
-            if (selector == 0)
-            {
-                var element = item.WpfControl.Item2;
-                var listener = new LivetWeakEventListener<DependencyPropertyChangedEventHandler, DependencyPropertyChangedEventArgs>(
-                    h => new DependencyPropertyChangedEventHandler(h),
-                    h => element.DataContextChanged += h,
-                    h => element.DataContextChanged -= h,
-                    (s, e) =>
-                    {
-                        item.WpfDataContext = e.NewValue;
-                        item.GetViewModelMember();
-                    });
-
-                _Listener = listener;
-                
-            }
-            else
-            {
-                var element = item.WpfControl.Item3;
-                var listener = new LivetWeakEventListener<DependencyPropertyChangedEventHandler, DependencyPropertyChangedEventArgs>(
-                    h => new DependencyPropertyChangedEventHandler(h),
-                    h => element.DataContextChanged += h,
-                    h => element.DataContextChanged -= h,
-                    (s, e) =>
-                    {
-                        item.WpfDataContext = e.NewValue;
-                        item.GetViewModelMember();
-                    });
-
-                _Listener = listener;
 
             }
 
@@ -350,6 +393,6 @@ namespace Livet.Fans.Experimental
             return resolver?.GetReturnValue(item, option);
             
         }
-        
+
     }
 }

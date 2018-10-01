@@ -1,7 +1,9 @@
 ﻿# Livet.Fans.Experimental
 Livet.Fans.Experimental は、非公式の Livet 拡張ライブラリです。
 他の MVVM ライブラリの便利機能が Livet でも使えたら快適なのにと思い、実際に Livet 向けにカスタマイズして作成しました。
-※公式提供のライブラリではありません。お問い合わせ含め、お間違いの無いようによろしくお願いいたします。
+
+※公式提供のライブラリではありません。お問い合わせ含め、お間違いの無いようによろしくお願いいたします。また、本ライブラリは Livet そのものを置き換えるものではありません。
+本ライブラリの他 Livet も必要になります。
 
 # 機能
 
@@ -15,7 +17,7 @@ NotificationObject, ViewModel の継承先クラス内で、Prism の SetPropert
         set { this.SetProperty(ref name, value); }
     }
 
-NotificationObject, ViewModel の継承先クラス内で、SetCommand() を使えるようにしました。SetProperty() のコマンド版です。
+NotificationObject, ViewModel の継承先クラス内で、SetCommand() を使えるようにしました。SetProperty() のコマンド版です。※ListenerCommand&lt;T&gt; も可能です。
 
     private ViewModelCommand clickCommand;
     public ViewModelCommand ClickCommand
@@ -64,7 +66,7 @@ ObservesCanExecute()
             .ObservesCanExecute(() => this.IsChecked);
     }
 
-先ほどの、SetCommand() でも、第4引数が ObservesProperty() 相当の役割となっているので、以下のような書き方も可能です。
+先ほどの、SetCommand() でも、第4引数が ObservesProperty() 相当の役割となっているので、以下のような書き方も可能です。※ListenerCommand&lt;T&gt; も可能です。
 
     private ViewModelCommand clickCommand;
     public ViewModelCommand ClickCommand
@@ -183,6 +185,7 @@ ReactiveProperty をバインドしている場合、ReactiveProperty の Value 
     }
 
 XAML 上で、Prism の ViewModelLocator を使えるようにしました。デフォルト値は「False」です。
+注意点として、見つけた ViewModel は、引数無しコンストラクタ経由でインスタンス生成して DataContext にセットしていますので、引数ありコンストラクタを行いたい場合は従来通り、手動でバインドしてください。
 
     xmlns:lf="http://schemas.livet-fans.jp/2018/wpf"
     lf:ViewModelLocator.AutoWireViewModel="True"

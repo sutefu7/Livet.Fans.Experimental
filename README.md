@@ -161,7 +161,7 @@ ConfirmationMessage 型の拡張機能で、戻り値を MessageBoxResult 型で
 
     ViewModel
     // メッセージボックス（確認、Yes/No/Cancel）
-    var mes = new ConfirmationMessage("this is a test", "確認", MessageBoxImage.Question, MessageBoxButton.YesNoCancel, MessageBoxResult.Cancel, "Confirm");
+    var mes = new ConfirmationMessage("確認だよ", "確認", MessageBoxImage.Question, MessageBoxButton.YesNoCancel, MessageBoxResult.Cancel, "Confirm");
     mes = await Messenger.GetResponseAsync(mes);
 
     //if (mes.Response == null)
@@ -174,7 +174,7 @@ ConfirmationMessage 型の拡張機能で、戻り値を MessageBoxResult 型で
     //    Console.WriteLine("No 押した");
 
     // 上記と同等
-    switch (mes.ClickedButton())
+    switch (mes.ClickedButton())     ←★これ
     {
         case MessageBoxResult.OK: Console.WriteLine("OK ボタンを押した"); break;
         case MessageBoxResult.Cancel: Console.WriteLine("Cancel ボタンを押した"); break;

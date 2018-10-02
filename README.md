@@ -379,15 +379,7 @@ MessengerOperator の AutoReceiveOperation に True をセットすることで�
 
 # ライセンス
 
-## 本プログラム
-
-- Livet.Fans.Experimental  
-   Copyright (c) sutefu7  
-   Released under the MIT license  
-   https://github.com/sutefu7/Livet.Fans.Experimental/blob/master/LICENSE  
-
-
-## その他のプログラム
+## 参考にさせていただいたプログラム
 
 - Livet (LivetCask, 1.3.1.0)  
    Copyright (c) 2010-2011 Livet Project  
@@ -425,4 +417,12 @@ MessengerOperator の AutoReceiveOperation に True をセットすることで�
    https://github.com/sourcechord/MarkupExtensionsForEvents/blob/master/LICENSE  
    以下のソースを流用しています。  
    https://github.com/sourcechord/MarkupExtensionsForEvents/blob/master/MarkupExtensionsForEvents/InvokeCommandExtension.cs  
+
+
+## 本プログラム
+
+- Livet.Fans.Experimental  
+   Copyright (c) sutefu7  
+   Released under the MIT license  
+   https://github.com/sutefu7/Livet.Fans.Experimental/blob/master/LICENSE  
 

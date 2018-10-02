@@ -8,6 +8,7 @@ Livet.Fans.Experimental は、非公式の Livet 拡張ライブラリです。
 # 機能
 
 ## Livet 名前空間
+
 NotificationObject, ViewModel の継承先クラス内で、Prism の SetProperty() を使えるようにしました。
 
     private string name;
@@ -111,6 +112,77 @@ IDisposable 型、またはそれを継承している型の拡張機能で、Re
             .AddTo(this);
     }
 
+ViewModel の継承先クラス内で、MessageBox を簡単に呼び出せるようにしました。
+情報、警告、エラー、確認（OK/Cancel, Yes/No, Yes/No/Cancel）の4種類のメッセージを、同期的に、または非同期的に表示することができます。
+また、タイトルなどの関連情報は、Optional 引数で変更することが可能です。
+
+    View
+    <l:InteractionMessageTrigger Messenger="{Binding Messenger}" MessageKey="ShowInformationMessage">
+        <l:InformationDialogInteractionMessageAction />
+    </l:InteractionMessageTrigger>
+    ※従来通り、Interaction.Triggers タグに含めて、それぞれ宣言
+
+    ViewModel
+    public async void Button_Click()
+    {
+        this.Messenger.Raise(new InformationMessage("情報だよ", "情報", MessageBoxImage.Information, "ShowInformationMessage"));
+        await this.Messenger.RaiseAsync(new InformationMessage("情報だよ", "情報", MessageBoxImage.Information, "ShowInformationMessageAsync"));
+
+        // 上記のような呼び出しと同等
+        this.ShowInformationMessage("情報だよ");
+        await this.ShowInformationMessageAsync("情報だよ");
+    }
+
+同様に、Window 処理系（Close(), Maximize(), Minimize(), Active()）も呼び出せるようにしました。
+
+    View
+    <l:InteractionMessageTrigger Messenger="{Binding Messenger}" MessageKey="Maximize">
+        <l:WindowInteractionMessageAction />
+    </l:InteractionMessageTrigger>
+    ※従来通り、Interaction.Triggers タグに含めて、それぞれ宣言
+
+    ViewModel
+    public void Button_Click()
+    {
+        //Messenger.Raise(new WindowActionMessage(WindowAction.Maximize, "Maximize"));
+
+        // 上記と同等
+        this.Maximize();
+    }
+
+## Livet.Messaging 名前空間
+
+ConfirmationMessage 型の拡張機能で、戻り値を MessageBoxResult 型で判断できるように戻しました。
+
+    View
+    <l:InteractionMessageTrigger Messenger="{Binding Messenger}" MessageKey="Confirm">
+        <l:ConfirmationDialogInteractionMessageAction />
+    </l:InteractionMessageTrigger>
+
+    ViewModel
+    // メッセージボックス（確認、Yes/No/Cancel）
+    var mes = new ConfirmationMessage("this is a test", "確認", MessageBoxImage.Question, MessageBoxButton.YesNoCancel, MessageBoxResult.Cancel, "Confirm");
+    mes = await Messenger.GetResponseAsync(mes);
+
+    //if (mes.Response == null)
+    //    Console.WriteLine("Cancel 押した");
+
+    //if (mes.Response.HasValue && mes.Response.Value)
+    //    Console.WriteLine("Yes/OK 押した");
+
+    //if (mes.Response.HasValue && !mes.Response.Value)
+    //    Console.WriteLine("No 押した");
+
+    // 上記と同等
+    switch (mes.ClickedButton())
+    {
+        case MessageBoxResult.OK: Console.WriteLine("OK ボタンを押した"); break;
+        case MessageBoxResult.Cancel: Console.WriteLine("Cancel ボタンを押した"); break;
+        case MessageBoxResult.Yes: Console.WriteLine("Yes ボタンを押した"); break;
+        case MessageBoxResult.No: Console.WriteLine("No ボタンを押した"); break;
+    }
+
+
 ## Livet.Fans.Experimental 名前空間
 
 XAML 側、標準 Binding にはできないバインド機構に関する拡張を組み込んでいます。あらかじめ、以下の名前空間を定義しておきます。
@@ -190,6 +262,108 @@ XAML 上で、Prism の ViewModelLocator を使えるようにしました。デ
     xmlns:lf="http://schemas.livet-fans.jp/2018/wpf"
     lf:ViewModelLocator.AutoWireViewModel="True"
 
+以下、使用頻度の高いトリガーアクションについて、自動応答する MessengerOperator を使えるようにしました。デフォルト値は「False」です。
+メッセージボックス系（情報、警告、エラー、確認）、Window 処理系（Close(), Maximize(), Minimize(), Active()）について、明示的に View 側で定義しなくても表示、または操作することが可能です。
+ただし、これを書いたコントロール(の DataContext にバインドした ViewModel )でのみ有効であり、その対象のコントロールは Window だけです。注意点２つ目は後述します。
+
+    View
+    <Window x:Class="WpfApp24.Window1"
+            ～
+            xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+            xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+            xmlns:lf="http://schemas.livet-fans.jp/2018/wpf"
+            lf:ViewModelLocator.AutoWireViewModel="True"
+            lf:MessengerOperator.AutoReceiveOperation="True"    ←★これ
+            ～
+            >
+        
+        <Grid>
+            <Button Content="check" Click="{lf:Binding Button_Click}" Margin="100" />
+        </Grid>
+        
+    </Window>
+
+    ViewModel
+    public class Window1ViewModel : ViewModel
+    {
+        public void Button_Click()
+        {
+            // メッセージボックス系（情報、警告、エラー、確認 / 同期、非同期呼び出し別）
+            this.ShowInformationMessage("情報だよ");
+
+            // Window 処理系（Close(), Maximize(), Minimize(), Active() / 同期、非同期呼び出し別）
+            this.Maximize();
+        }
+    }
+
+MessengerOperator の AutoReceiveOperation に True をセットすることで、以下と同等となります（Interaction.Triggers 内への定義が不要になる）。
+
+    <Window x:Class="WpfApp24.Window1"
+            ～
+            xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+            xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+            xmlns:lf="http://schemas.livet-fans.jp/2018/wpf"
+            lf:ViewModelLocator.AutoWireViewModel="True"
+            ～
+            >
+    
+        <i:Interaction.Triggers>
+    
+            <!-- 表示のみ系のメッセージボックス -->
+            <l:InteractionMessageTrigger Messenger="{Binding Messenger}" MessageKey="ShowInformationMessage">
+                <l:InformationDialogInteractionMessageAction />
+            </l:InteractionMessageTrigger>
+    
+            <!-- 
+            ・・・
+            種類に応じて、必要な分定義
+            ・・・
+            -->
+    
+            <!-- 戻り値あり系のメッセージボックス -->
+            <l:InteractionMessageTrigger Messenger="{Binding Messenger}" MessageKey="Confirm">
+                <l:ConfirmationDialogInteractionMessageAction />
+            </l:InteractionMessageTrigger>
+    
+            <!-- 
+            ・・・
+            種類に応じて、必要な分定義
+            ・・・
+            -->
+    
+            <!-- Window 操作系 -->
+            <l:InteractionMessageTrigger Messenger="{Binding Messenger}" MessageKey="Maximize">
+                <l:WindowInteractionMessageAction />
+            </l:InteractionMessageTrigger>
+    
+            <!-- 
+            ・・・
+            種類に応じて、必要な分定義
+            ・・・
+            -->
+    
+        </i:Interaction.Triggers>
+        
+        <Grid>
+            <Button Content="check" Click="{lf:Binding Button_Click}" Margin="100" />
+        </Grid>
+        
+    </Window>
+
+また、以下の制限も追加であります。以下の機能を使いたい場合は、既存の実装をおこなってください。
+
+- InteractionMessageTrigger  
+   InvokeActionsOnlyWhileAttatchedObjectLoaded : bool の機能は無効です。  
+   IsEnable : bool の機能は無効です。  
+
+- InformationDialogInteractionMessageAction  
+   InvokeActionOnlyWhenWindowIsActive : bool の機能は無効です。  
+
+- ConfirmationDialogInteractionMessageAction  
+   InvokeActionOnlyWhenWindowIsActive : bool の機能は無効です。  
+
+- WindowInteractionMessageAction  
+   InvokeActionOnlyWhenWindowIsActive : bool の機能は無効です。  
 
 # 開発環境＆動作環境
 

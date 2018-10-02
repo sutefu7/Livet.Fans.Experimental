@@ -43,7 +43,7 @@ namespace Livet.Fans.Experimental
         private static Dictionary<string, object> _Cache;
 
         /// <summary>
-        /// 自動的に ViewModel をバインドするかどうかを決める、AutoWireViewModel 添付プロパティです。
+        /// 自動的に ViewModel をバインドするかどうかを決める 添付プロパティです。
         /// </summary>
         public static DependencyProperty AutoWireViewModelProperty = 
             DependencyProperty.RegisterAttached("AutoWireViewModel", typeof(bool), typeof(ViewModelLocator), new PropertyMetadata(false, AutoWireViewModelChanged));

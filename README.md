@@ -395,6 +395,9 @@ MessengerOperator の AutoReceiveOperation に True をセットすることで�
    https://github.com/ugaya40/Livet/blob/master/license-jp.txt  
    以下のソースを流用しています。  
    https://github.com/ugaya40/Livet/blob/master/.NET4.0/Livet(.NET4.0)/EventListeners/WeakEvents/LivetWeakEventListener.cs  
+   https://github.com/ugaya40/Livet/blob/master/.NET4.0/Livet(.NET4.0)/Behaviors/Messaging/InformationDialogInteractionMessageAction.cs  
+   https://github.com/ugaya40/Livet/blob/master/.NET4.0/Livet(.NET4.0)/Behaviors/Messaging/ConfirmationDialogInteractionMessageAction.cs  
+   https://github.com/ugaya40/Livet/blob/master/.NET4.0/Livet(.NET4.0)/Behaviors/Messaging/Windows/WindowInteractionMessageAction.cs  
 
 - Prism  
    Copyright (c) .NET Foundation  
